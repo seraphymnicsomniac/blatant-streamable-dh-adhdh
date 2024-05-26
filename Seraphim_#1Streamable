@@ -31,7 +31,7 @@ end
 if getgenv().Seraphim.Startup == true then
 	startup()
 else
-	game:Shutdown()
+	startup()
 end
 
 
@@ -101,7 +101,7 @@ local function updateFov()
 		}
 		for i = 1, 3 do
 			local line = Drawing.new("Line")
-			line.Visible = settings.FovVisible
+			line.Visible = getgenv().Seraphim.FOV2.FovVisible
 			line.From = points[i]
 			line.To = points[i % 3 + 1]
 			line.Color = settings.FovColor

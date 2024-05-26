@@ -5,8 +5,7 @@
 --}
 local NotifyLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vKhonshu/intro/main/ui"))()
 
-getgenv().Seraphim = {
-test = false,
+
 FOV = {
 		FovThickness = 2,
 		FovTransparency = 0.7,
@@ -23,7 +22,7 @@ FOV = {
 		HitPointTransparency = 1,
 	}
 
-}
+
 
 function startup()
 	NotifyLib.prompt('Seraphim - #1 Streamable', 'Loaded. - Enjoy.', 5)
@@ -73,7 +72,7 @@ end
 
 -- // Update FOV Function // --
 local function updateFov()
-	local settings = getgenv().Seraphim.FOV
+	local settings = FOV
 	clearFovParts()
 
 	if settings.FovShape == "Square" then
@@ -153,7 +152,7 @@ end
 local function isPartInFovAndVisible(part)
 	local screenPoint, onScreen = Current_Camera:WorldToScreenPoint(part.Position)
 	local distance = (V2(screenPoint.X, screenPoint.Y) - V2(Mouse.X, Mouse.Y)).Magnitude
-	return onScreen and distance <= getgenv().Seraphim.FOV.FovRadius
+	return onScreen and distance <= getgenv().Seraphim.FOV2.FovRadius
 end
 
 -- // Check if Part Visible // --

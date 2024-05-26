@@ -28,11 +28,7 @@ function startup()
 	NotifyLib.prompt('Seraphim - #1 Streamable', 'Loaded. - Enjoy.', 5)
 end
 
-if getgenv().Seraphim.Startup == true then
-	startup()
-else
-	startup()
-end
+startup()
 
 
 

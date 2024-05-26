@@ -5,25 +5,7 @@
 --}
 local NotifyLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vKhonshu/intro/main/ui"))()
 
-getgenv().Seraphim = {
-test = false,
-FOV = {
-		FovThickness = 2,
-		FovTransparency = 0.7,
-		FovColor = Color3.fromRGB(255, 255, 255),
-		Filled = false,
-		FillTransparency = 0.9,
-		FovShape = "Circle"  -- ["Circle", "Square", "Triangle"] -- Doesnt Work ATM ig
-	},
-	HitPoint = {
-		ShowHitPoint = false,
-		HitPointRadius = 8,
-		HitPointThickness = 2,
-		HitPointColor = Color3.fromRGB(255, 0, 0),
-		HitPointTransparency = 1,
-	}
 
-}
 
 function startup()
 	NotifyLib.prompt('Seraphim - #1 Streamable', 'Loaded. - Enjoy.', 5)
@@ -73,7 +55,7 @@ end
 
 -- // Update FOV Function // --
 local function updateFov()
-	local settings = getgenv().Seraphim.FOV
+	local settings = getgenv().Seraphim.FovSettings
 	clearFovParts()
 
 	if settings.FovShape == "Square" then
@@ -153,7 +135,7 @@ end
 local function isPartInFovAndVisible(part)
 	local screenPoint, onScreen = Current_Camera:WorldToScreenPoint(part.Position)
 	local distance = (V2(screenPoint.X, screenPoint.Y) - V2(Mouse.X, Mouse.Y)).Magnitude
-	return onScreen and distance <= getgenv().Seraphim.FOV.FovRadius
+	return onScreen and distance <= getgenv().Seraphim.FovSettings.FovRadius
 end
 
 -- // Check if Part Visible // --
@@ -233,7 +215,7 @@ end
 -- // Toggle Feature // --
 local function toggleFeature()
 	getgenv().Seraphim.Enabled = not getgenv().Seraphim.Enabled
-	local status = getgenv().Seraphim.Enabled and "Seraphim Enabled -" or "Seraphim Disabled -"
+	local status = getgenv().Seraphim.Enabled and "Sharp Enabled" or "Sharp Disabled"
 	NotifyLib.prompt('Seraphim - #1 Streamable', 'Silent: '..status, 5)
 	if not getgenv().Seraphim.Enabled then
 		Fov.Visible = false

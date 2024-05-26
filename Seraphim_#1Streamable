@@ -24,11 +24,9 @@ FOV = {
 
 
 
-function startup()
-	NotifyLib.prompt('Seraphim - #1 Streamable', 'Loaded. - Enjoy.', 5)
-end
 
-startup()
+	NotifyLib.prompt('Seraphim - #1 Streamable', 'Loaded. - Enjoy.', 5)
+
 
 
 

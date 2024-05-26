@@ -6,12 +6,30 @@
 local NotifyLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vKhonshu/intro/main/ui"))()
 
 
+FOV = {
+
+	FovThickness = 2,
+	FovTransparency = 0.7,
+	FovColor = Color3.fromRGB(255, 255, 255),
+	Filled = false,
+	FillTransparency = 0.9,
+	FovShape = "Circle"  -- ["Circle", "Square", "Triangle"] -- Doesnt Work ATM ig
+}
+
+HitPoint = {
+	ShowHitPoint = false,
+	HitPointRadius = 8,
+	HitPointThickness = 2,
+	HitPointColor = Color3.fromRGB(255, 0, 0),
+	HitPointTransparency = 1,
+}
+
 
 function startup()
 	NotifyLib.prompt('Seraphim - #1 Streamable', 'Loaded. - Enjoy.', 5)
 end
 
-if getgenv().Seraphim.Enabled == true then
+if getgenv().Seraphim.Startup == true then
 	startup()
 else
 	game:Shutdown()
@@ -55,10 +73,10 @@ end
 
 -- // Update FOV Function // --
 local function updateFov()
-	local settings = getgenv().Seraphim.FovSettings
+	local settings = getgenv().Seraphim.FOV2
 	clearFovParts()
 
-	if settings.FovShape == "Square" then
+	if FOV.FovShape == "Square" then
 		local halfSize = settings.FovRadius / 2
 		local corners = {
 			V2(Mouse.X - halfSize, Mouse.Y - halfSize),
@@ -71,9 +89,9 @@ local function updateFov()
 			line.Visible = settings.FovVisible
 			line.From = corners[i]
 			line.To = corners[i % 4 + 1]
-			line.Color = settings.FovColor
-			line.Thickness = settings.FovThickness
-			line.Transparency = settings.FovTransparency
+			line.Color = FOV.FovColor
+			line.Thickness = FOV.FovThickness
+			line.Transparency = FOV.FovTransparency
 			table.insert(FovParts, line)
 		end
 	elseif settings.FovShape == "Triangle" then
@@ -87,20 +105,20 @@ local function updateFov()
 			line.Visible = settings.FovVisible
 			line.From = points[i]
 			line.To = points[i % 3 + 1]
-			line.Color = settings.FovColor
-			line.Thickness = settings.FovThickness
-			line.Transparency = settings.FovTransparency
+			line.Color = FOV.FovColor
+			line.Thickness = FOV.FovThickness
+			line.Transparency = FOV.FovTransparency
 			table.insert(FovParts, line)
 		end
 	else  -- Default to Circle
 		Fov.Visible = settings.FovVisible
 		Fov.Radius = settings.FovRadius
 		Fov.Position = V2(Mouse.X, Mouse.Y + (G:GetService("GuiService"):GetGuiInset().Y))
-		Fov.Color = settings.FovColor
-		Fov.Thickness = settings.FovThickness
-		Fov.Transparency = settings.FovTransparency
-		Fov.Filled = settings.Filled
-		if settings.Filled then
+		Fov.Color = FOV.FovColor
+		Fov.Thickness = FOV.FovThickness
+		Fov.Transparency = FOV.FovTransparency
+		Fov.Filled = FOV.Filled
+		if FOV.Filled then
 			Fov.Transparency = settings.FillTransparency
 		end
 	end
@@ -135,7 +153,7 @@ end
 local function isPartInFovAndVisible(part)
 	local screenPoint, onScreen = Current_Camera:WorldToScreenPoint(part.Position)
 	local distance = (V2(screenPoint.X, screenPoint.Y) - V2(Mouse.X, Mouse.Y)).Magnitude
-	return onScreen and distance <= getgenv().Seraphim.FovSettings.FovRadius
+	return onScreen and distance <= getgenv().Seraphim.FOV2.FovRadius
 end
 
 -- // Check if Part Visible // --
@@ -214,10 +232,11 @@ end
 
 -- // Toggle Feature // --
 local function toggleFeature()
-	getgenv().Seraphim.Enabled = not getgenv().Seraphim.Enabled
-	local status = getgenv().Seraphim.Enabled and "Sharp Enabled" or "Sharp Disabled"
+	getgenv().Seraphim.SilentAim = not getgenv().Seraphim.SilentAim
+	local status = getgenv().Seraphim.SilentAim and "Seraphim Enabled -" or "Seraphim Disabled -"
 	NotifyLib.prompt('Seraphim - #1 Streamable', 'Silent: '..status, 5)
-	if not getgenv().Seraphim.Enabled then
+	print(getgenv().Seraphim.SilentAim)
+	if not getgenv().Seraphim.SilentAim then
 		Fov.Visible = false
 		HitPoint.Visible = false
 		clearFovParts()
@@ -246,13 +265,13 @@ end)
 
 -- // Main Loop // --
 Run_Service.RenderStepped:Connect(function()
-	if getgenv().Seraphim.Enabled then
+	if getgenv().Seraphim.SilentAim then
 		Target = GetClosestPlr()
 		updateFov()
 		if Target and Target.Character then
 			local closestPart, closestPoint = GetClosestHitPoint(Target.Character)
 			if closestPart and closestPoint then
-				local hitPointSettings = getgenv().Seraphim.HitPoint
+				local hitPointSettings = HitPoint
 				if hitPointSettings.ShowHitPoint then
 					HitPoint.Visible = true
 					local screenPoint = Current_Camera:WorldToViewportPoint(closestPoint)
